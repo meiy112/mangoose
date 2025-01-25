@@ -25,8 +25,18 @@ router.post("/register", async (req, res) => {
 
 // user login
 router.post("/login", async (req, res) => {
+  const SYSTEM_USER = "mangoose";
+
   try {
     const { username, password } = req.body;
+
+    if (username === SYSTEM_USER) {
+      res.status(401).json({
+        status: 401,
+        message: "Cannot log in"
+      });
+      return;
+    }
 
     const token = await authService.loginUser(username, password);
 

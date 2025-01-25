@@ -1,14 +1,14 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import User from '../models/User';
+import ProfilePicture from '../models/ProfilePictureConfig';
 
 class AuthService {
   // user registration
   public async registerUser(name: string, email: string, username: string, password: string) {
     try {
       const usernameAlreadyExists = await User.findOne({ username });
-      const emailAlreadyExists = await User.findOne({ email });
-
+      const emailAlreadyExists = await User.findOne({ email: { $exists: true, $eq: email } });
 
       if (usernameAlreadyExists) {
       throw new Error('Username already exists');
@@ -20,7 +20,26 @@ class AuthService {
 
       const hashedPassword = crypto.createHash('sha256').update(password).digest('hex');
 
-      await User.create({ name: name, email: email, username: username, password: hashedPassword });
+      const defaultProfile = await ProfilePicture.create({
+        bgColor: "#FFFFFF",
+        baseImage: "./images/goose.png",
+        accessory: "",
+        heldItem: "",
+      });
+
+
+      const profilePictureId = defaultProfile._id;
+
+      await User.create({
+        name: name, 
+        email: email, 
+        username: username, 
+        password: hashedPassword,
+        dailyStreakCount: 0,
+        longestStreak: 0,
+        totalExp: 0,
+        profile: profilePictureId,
+       });
       const foundUser = await User.findOne({ username });
       const token = this.getJwtToken(foundUser?._id, foundUser?.username);
 

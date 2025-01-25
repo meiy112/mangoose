@@ -6,8 +6,8 @@ import { OPENAI_EXAMPLE, OPENAI_INSTRUCTIONS } from "../constants/openAIConstant
 
 
 class OpenAIService {
-
-  public async generateLesson(userId : string, content: string) {
+  // generates a lesson given content
+  public async generateLesson(content: string) {
     const openai = new OpenAI({ apiKey: process.env.OPENAI_KEY as string });
 
     let example = OPENAI_EXAMPLE;

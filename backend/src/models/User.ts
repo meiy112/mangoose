@@ -24,9 +24,9 @@ const UserSchema = new mongoose.Schema(
       required: true,
     },
     profile: {
-      // Profile id
+      // Profile Picture id
       type: ObjectId,
-      ref: "Profile",
+      ref: "ProfilePicture",
     },
     history: {
       // history id
@@ -36,13 +36,7 @@ const UserSchema = new mongoose.Schema(
     dailyStreakLastUpdateTime: Date,
     dailyStreakCount: Number,
     longestStreak: Number,
-    lessons: [
-      {
-        // Lesson ids
-        type: ObjectId,
-        ref: "Lesson",
-      },
-    ],
+    totalExp: Number,
   },
   { timestamps: true }
 );
